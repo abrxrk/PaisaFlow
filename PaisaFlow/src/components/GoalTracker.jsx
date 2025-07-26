@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Plus, Edit2, Trash2, Target, Calendar } from 'lucide-react';
 import { formatCurrency, formatDate } from '../utils';
+import { databases, dbId, goalsCollectionId, ID } from '../appwriteConfig';
 
-const GoalTracker = ({ goals, onUpdateGoals }) => {
+const GoalTracker = ({ goals, onUpdate }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingGoal, setEditingGoal] = useState(null);
   const [formData, setFormData] = useState({
@@ -14,38 +15,51 @@ const GoalTracker = ({ goals, onUpdateGoals }) => {
     color: '#10B981'
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editingGoal) {
-      const updatedGoals = goals.map(g =>
-        g.id === editingGoal.id
-          ? {
-              ...g,
-              title: formData.title,
-              targetAmount: Number(formData.targetAmount),
-              currentAmount: Number(formData.currentAmount),
-              deadline: formData.deadline,
-              category: formData.category,
-              color: formData.color
-            }
-          : g
-      );
-      onUpdateGoals(updatedGoals);
-      setEditingGoal(null);
-    } else {
-      const newGoal = {
-        id: Date.now().toString(),
-        title: formData.title,
-        targetAmount: Number(formData.targetAmount),
-        currentAmount: Number(formData.currentAmount),
-        deadline: formData.deadline,
-        category: formData.category,
-        color: formData.color
-      };
-      onUpdateGoals([...goals, newGoal]);
+    try {
+      if (editingGoal) {
+        // Update existing document in Appwrite
+        await databases.updateDocument(
+          dbId,
+          goalsCollectionId,
+          editingGoal.$id,
+          {
+            title: formData.title,
+            targetAmount: Number(formData.targetAmount),
+            currentAmount: Number(formData.currentAmount),
+            deadline: formData.deadline,
+            category: formData.category,
+            color: formData.color
+          }
+        );
+      } else {
+        // Create a new document in Appwrite
+        await databases.createDocument(
+          dbId,
+          goalsCollectionId,
+          ID.unique(),
+          {
+            title: formData.title,
+            targetAmount: Number(formData.targetAmount),
+            currentAmount: Number(formData.currentAmount),
+            deadline: formData.deadline,
+            category: formData.category,
+            color: formData.color
+          }
+        );
+      }
+      onUpdate(); // Trigger data refetch in the parent component
+      
+      // Reset and close form
       setShowAddForm(false);
+      setEditingGoal(null);
+      setFormData({ title: '', targetAmount: '', currentAmount: '', deadline: '', category: '', color: '#10B981' });
+
+    } catch (error) {
+      console.error("Failed to save goal:", error);
+      alert("Error: Could not save the goal.");
     }
-    setFormData({ title: '', targetAmount: '', currentAmount: '', deadline: '', category: '', color: '#10B981' });
   };
 
   const handleEdit = (goal) => {
@@ -54,24 +68,34 @@ const GoalTracker = ({ goals, onUpdateGoals }) => {
       title: goal.title,
       targetAmount: goal.targetAmount.toString(),
       currentAmount: goal.currentAmount.toString(),
-      deadline: goal.deadline,
+      deadline: goal.deadline.substring(0, 10), // Format date for input
       category: goal.category,
       color: goal.color
     });
+    setShowAddForm(true);
   };
 
-  const handleDelete = (id) => {
-    const updatedGoals = goals.filter(g => g.id !== id);
-    onUpdateGoals(updatedGoals);
+  const handleDelete = async (goalId) => {
+    try {
+      await databases.deleteDocument(dbId, goalsCollectionId, goalId);
+      onUpdate(); // Trigger data refetch
+    } catch (error) {
+      console.error("Failed to delete goal:", error);
+      alert("Error: Could not delete the goal.");
+    }
   };
 
-  const handleProgressUpdate = (goalId, amount) => {
-    const updatedGoals = goals.map(g =>
-      g.id === goalId
-        ? { ...g, currentAmount: Math.max(0, g.currentAmount + amount) }
-        : g
-    );
-    onUpdateGoals(updatedGoals);
+  const handleProgressUpdate = async (goal, amount) => {
+    const newAmount = Math.max(0, goal.currentAmount + amount);
+    try {
+        await databases.updateDocument(dbId, goalsCollectionId, goal.$id, {
+            currentAmount: newAmount
+        });
+        onUpdate();
+    } catch (error) {
+        console.error("Failed to update goal progress:", error);
+        alert("Error: Could not update goal progress.");
+    }
   };
 
   const getDaysRemaining = (deadline) => {
@@ -87,7 +111,11 @@ const GoalTracker = ({ goals, onUpdateGoals }) => {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800">Goal Tracker</h2>
         <button
-          onClick={() => setShowAddForm(true)}
+          onClick={() => { 
+            setShowAddForm(true);
+            setEditingGoal(null);
+            setFormData({ title: '', targetAmount: '', currentAmount: '', deadline: '', category: '', color: '#10B981' });
+          }}
           className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
         >
           <Plus className="h-4 w-4" />
@@ -177,14 +205,7 @@ const GoalTracker = ({ goals, onUpdateGoals }) => {
                 onClick={() => {
                   setShowAddForm(false);
                   setEditingGoal(null);
-                  setFormData({
-                    title: '',
-                    targetAmount: '',
-                    currentAmount: '',
-                    deadline: '',
-                    category: '',
-                    color: '#10B981'
-                  });
+                  setFormData({ title: '', targetAmount: '', currentAmount: '', deadline: '', category: '', color: '#10B981' });
                 }}
                 className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
               >
@@ -203,7 +224,7 @@ const GoalTracker = ({ goals, onUpdateGoals }) => {
           const isAchieved = goal.currentAmount >= goal.targetAmount;
           
           return (
-            <div key={goal.id} className="bg-white rounded-lg shadow-md p-6">
+            <div key={goal.$id} className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800">{goal.title}</h3>
@@ -217,7 +238,7 @@ const GoalTracker = ({ goals, onUpdateGoals }) => {
                     <Edit2 className="h-4 w-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(goal.id)}
+                    onClick={() => handleDelete(goal.$id)}
                     className="text-gray-500 hover:text-red-600 transition-colors"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -256,7 +277,7 @@ const GoalTracker = ({ goals, onUpdateGoals }) => {
                     Deadline
                   </span>
                   <span className={`font-medium ${daysRemaining < 30 ? 'text-red-600' : 'text-gray-800'}`}>
-                    {formatDate(goal.deadline)} ({daysRemaining} days)
+                    {formatDate(goal.deadline)} ({daysRemaining > 0 ? `${daysRemaining} days left` : 'Past due'})
                   </span>
                 </div>
               </div>
@@ -269,19 +290,19 @@ const GoalTracker = ({ goals, onUpdateGoals }) => {
               ) : (
                 <div className="flex space-x-2">
                   <button
-                    onClick={() => handleProgressUpdate(goal.id, 1000)}
+                    onClick={() => handleProgressUpdate(goal, 1000)}
                     className="flex-1 bg-green-100 text-green-700 py-2 px-3 rounded-lg hover:bg-green-200 transition-colors text-sm"
                   >
                     +₹1,000
                   </button>
                   <button
-                    onClick={() => handleProgressUpdate(goal.id, 5000)}
+                    onClick={() => handleProgressUpdate(goal, 5000)}
                     className="flex-1 bg-green-100 text-green-700 py-2 px-3 rounded-lg hover:bg-green-200 transition-colors text-sm"
                   >
                     +₹5,000
                   </button>
                   <button
-                    onClick={() => handleProgressUpdate(goal.id, -1000)}
+                    onClick={() => handleProgressUpdate(goal, -1000)}
                     className="flex-1 bg-red-100 text-red-700 py-2 px-3 rounded-lg hover:bg-red-200 transition-colors text-sm"
                   >
                     -₹1,000

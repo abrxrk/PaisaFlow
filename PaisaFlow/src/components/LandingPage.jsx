@@ -124,9 +124,7 @@ const LandingPage = ({ onGetStarted }) => {
                   <span>Start Your Journey</span>
                   <ArrowRight className="h-5 w-5" />
                 </button>
-                <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl hover:border-gray-400 transition-colors font-semibold text-lg">
-                  Watch Demo
-                </button>
+                
               </div>
 
               <div className="flex items-center space-x-8 pt-4">
