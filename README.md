@@ -29,6 +29,7 @@ PaisaFlow is a modern, full-stack web application designed to help you take cont
 * **Frontend:** [React](https://react.dev/) (v19)
 * **Build Tool:** [Vite](https://vitejs.dev/)
 * **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+* **Backend & Database:** [Appwrite](https://appwrite.io/)
 * **Icons:** [Lucide React](https://lucide.dev/)
 * **AI/LLM Integration:** [OpenRouter API](https://openrouter.ai/) (using the Mistral 7B model)
 
@@ -40,6 +41,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 * [Node.js](https://nodejs.org/en/) (v18 or newer)
 * [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+* An [Appwrite](https://appwrite.io/) instance (cloud or self-hosted).
 
 ### Installation
 
@@ -64,10 +66,15 @@ Follow these instructions to get a copy of the project up and running on your lo
     * Create a new file named `.env` in the `PaisaFlow/` root directory.
     * Add the following line to the `.env` file, replacing `your_api_key_here` with your actual OpenRouter API key:
 
-    ```env
-    VITE_OPENROUTER_API_KEY="your_api_key_here"
+   # OpenRouter API Key for the AI Chatbot
+    VITE_OPENROUTER_API_KEY=""
+    VITE_APPWRITE_URL=""
+    VITE_APPWRITE_PROJECT_ID=""
+    VITE_APPWRITE_DATABASE_ID=""
+    VITE_APPWRITE_TRANSACTIONS_ID=""
+    VITE_APPWRITE_BUDGETS_ID=""
+    VITE_APPWRITE_GOALS_ID=""
     ```
-
 5.  **Run the development server:**
     ```sh
     npm run dev
