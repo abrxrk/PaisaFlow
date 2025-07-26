@@ -1,7 +1,5 @@
 # PaisaFlow - Your AI-Powered Financial Companion
 
-![PaisaFlow Live Demo]([https://i.imgur.com/your-screenshot-url.png](https://paisaflow-inxp.onrender.com/)) 
-
 PaisaFlow is a modern, full-stack web application designed to help you take control of your financial health. It provides a beautiful and intuitive interface to monitor spending, manage budgets, track goals, and get personalized insights from an AI-powered chatbot.
 
 ---
