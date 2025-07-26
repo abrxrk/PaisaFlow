@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
-import { formatCurrency, calculateFinancialSummary } from '../utils';
 
 const ChatbotPopup = ({ transactions, budgets, goals }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,7 +7,7 @@ const ChatbotPopup = ({ transactions, budgets, goals }) => {
   const [messages, setMessages] = useState([
     {
       id: '1',
-      message: "Hi! I'm your AI Finance Assistant. I can help you with questions about your spending, budgets, and financial goals. Try asking me something like 'How much did I spend on food this month?' or 'Am I under budget?'",
+      message: "Hi! I'm your AI Finance Assistant. I can help you with questions about your spending, budgets, and financial goals.",
       isUser: false,
       timestamp: new Date().toISOString()
     }
@@ -25,77 +24,6 @@ const ChatbotPopup = ({ transactions, budgets, goals }) => {
     scrollToBottom();
   }, [messages]);
 
-  const generateResponse = (userMessage) => {
-    const message = userMessage.toLowerCase();
-    const summary = calculateFinancialSummary(transactions);
-
-    // Food spending queries
-    if (message.includes('food') && (message.includes('spend') || message.includes('spent'))) {
-      const foodSpending = summary.categoryBreakdown['Food'] || 0;
-      return `You've spent ${formatCurrency(foodSpending)} on food this month. This represents ${((foodSpending / summary.totalExpenses) * 100).toFixed(1)}% of your total expenses.`;
-    }
-
-    // Budget queries
-    if (message.includes('budget') || message.includes('under budget')) {
-      const overBudgetCategories = budgets.filter(b => b.spent > b.limit);
-      if (overBudgetCategories.length === 0) {
-        return `Great news! You're within budget for all categories. Your overall spending is well managed.`;
-      } else {
-        const overBudgetList = overBudgetCategories.map(b =>
-          `${b.category}: ${formatCurrency(b.spent)} spent vs ${formatCurrency(b.limit)} budget`
-        ).join(', ');
-        return `You're over budget in ${overBudgetCategories.length} category(ies): ${overBudgetList}. Consider adjusting your spending in these areas.`;
-      }
-    }
-
-    // Savings rate queries
-    if (message.includes('savings rate') || message.includes('save')) {
-      return `Your current savings rate is ${summary.savingsRate.toFixed(1)}%. You're saving ${formatCurrency(summary.savings)} out of your total income of ${formatCurrency(summary.totalIncome)}. ${summary.savingsRate >= 20 ? 'Excellent savings rate!' : summary.savingsRate >= 10 ? 'Good savings rate, but there\'s room for improvement.' : 'Consider increasing your savings rate for better financial health.'}`;
-    }
-
-    // Total spending queries
-    if (message.includes('total') && (message.includes('spend') || message.includes('spent'))) {
-      return `Your total expenses this month are ${formatCurrency(summary.totalExpenses)}. Your biggest spending categories are: ${Object.entries(summary.categoryBreakdown).sort(([, a], [, b]) => b - a).slice(0, 3).map(([cat, amt]) => `${cat} (${formatCurrency(amt)})`).join(', ')}.`;
-    }
-
-    // Goals queries
-    if (message.includes('goal') || message.includes('goals')) {
-      const activeGoals = goals.filter(g => g.currentAmount < g.targetAmount);
-      const completedGoals = goals.filter(g => g.currentAmount >= g.targetAmount);
-
-      if (completedGoals.length > 0) {
-        return `You've completed ${completedGoals.length} goal(s): ${completedGoals.map(g => g.title).join(', ')}. ${activeGoals.length > 0 ? `You still have ${activeGoals.length} active goal(s) to work on.` : 'Congratulations on achieving all your goals!'}`;
-      } else {
-        return `You have ${activeGoals.length} active goals. Your closest to completion is "${activeGoals.sort((a, b) => (b.currentAmount / b.targetAmount) - (a.currentAmount / a.targetAmount))[0]?.title}" at ${((activeGoals[0]?.currentAmount / activeGoals[0]?.targetAmount) * 100).toFixed(1)}% complete.`;
-      }
-    }
-
-    // Income queries
-    if (message.includes('income') || message.includes('earn')) {
-      return `Your total income this month is ${formatCurrency(summary.totalIncome)}. After expenses of ${formatCurrency(summary.totalExpenses)}, your net savings are ${formatCurrency(summary.savings)}.`;
-    }
-
-    // Transportation queries
-    if (message.includes('transport') || message.includes('travel') || message.includes('uber') || message.includes('metro')) {
-      const transportSpending = summary.categoryBreakdown['Transport'] || 0;
-      return `You've spent ${formatCurrency(transportSpending)} on transportation this month.`;
-    }
-
-    // Entertainment queries
-    if (message.includes('entertainment') || message.includes('netflix') || message.includes('movie')) {
-      const entertainmentSpending = summary.categoryBreakdown['Entertainment'] || 0;
-      return `Your entertainment expenses this month total ${formatCurrency(entertainmentSpending)}.`;
-    }
-
-    // Greeting responses
-    if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
-      return `Hello! I'm here to help you with your finances. You can ask me about your spending, budgets, savings rate, or financial goals. What would you like to know?`;
-    }
-
-    // Default response
-    return `I can help you with questions about your spending, budgets, and financial goals. Try asking about specific categories like food, transport, or entertainment, or ask about your overall budget status and savings rate.`;
-  };
-
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
@@ -110,19 +38,60 @@ const ChatbotPopup = ({ transactions, budgets, goals }) => {
     setInputMessage('');
     setIsTyping(true);
 
-    // Simulate AI processing time
-    setTimeout(() => {
-      const response = generateResponse(inputMessage);
+    try {
+      const systemPrompt = `You are an expert financial assistant.
+
+- If the user asks a question about their personal finances (like spending, budgets, or goals), use the provided data to give a specific, data-driven answer.
+- If the user asks a general financial question (like "What is a SIP?" or "How does a credit score work?"), provide a clear, general definition and explanation. Do not mention their personal data in this case.
+
+Here is the user's financial data for context:
+Transactions: ${JSON.stringify(transactions)}
+Budgets: ${JSON.stringify(budgets)}
+Goals: ${JSON.stringify(goals)}
+Current Date: ${new Date().toLocaleDateString()}`;
+
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "mistralai/mistral-7b-instruct:free",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: inputMessage }
+          ],
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("API request failed");
+      }
+
+      const data = await response.json();
+      const botResponse = data.choices[0].message.content;
+
       const botMessage = {
         id: (Date.now() + 1).toString(),
-        message: response,
+        message: botResponse,
         isUser: false,
         timestamp: new Date().toISOString()
       };
-
       setMessages(prev => [...prev, botMessage]);
+
+    } catch (error) {
+      console.error("Error fetching from OpenRouter:", error);
+      const errorMessage = {
+        id: (Date.now() + 1).toString(),
+        message: "Sorry, I'm having trouble connecting. Please try again later.",
+        isUser: false,
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -201,7 +170,7 @@ const ChatbotPopup = ({ transactions, budgets, goals }) => {
                       <div className="flex-1">
                         <p className="text-sm">{message.message}</p>
                         <p className={`text-xs mt-1 ${message.isUser ? 'text-blue-100' : 'text-gray-500'}`}>
-                          {new Date(message.timestamp).toLocaleTimeString()}
+                          {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
                       {message.isUser && <User className="h-4 w-4 mt-1 flex-shrink-0" />}
@@ -235,7 +204,7 @@ const ChatbotPopup = ({ transactions, budgets, goals }) => {
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Ask me about your finances..."
+                  placeholder="Ask a question..."
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent text-sm"
                   disabled={isTyping}
                 />
