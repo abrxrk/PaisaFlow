@@ -30,7 +30,7 @@ It provides tools to monitor spending, manage budgets, track goals, and gain per
 
 ## 📦 Tech Stack
 - **Frontend**: React.js, Tailwind CSS  
-- **Backend**: Node.js, Express.js  
+- **Backend & Authentication**: Appwrite 
 - **Database**: Appwrite  
 - **Deployment**: Render
 
