@@ -13,11 +13,13 @@ It provides tools to monitor spending, manage budgets, track goals, and gain per
 
 ---
 
-## 💻 My Contributions
-- Integrated backend services and connected the frontend to Appwrite database.  
-- Implemented full CRUD operations for financial data management.  
-- Worked on authentication features to secure user accounts.  
-- Improved overall project structure and updated documentation for better onboarding.
+### ✨ My Contributions
+- 🔗 Integrated **Appwrite database** for secure and scalable financial data storage  
+- 🛠 Built **full CRUD functionality** for managing expenses, budgets, and financial goals  
+- 🔐 Implemented **user authentication** (sign-up & login) for secure account access  
+- 📚 Improved **project structure and documentation** for better maintainability and onboarding  
+- 🚀 Deployed the application on **Render** ensuring reliable and continuous availability  
+
 
 ---
 
