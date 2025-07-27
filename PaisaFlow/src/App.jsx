@@ -6,7 +6,8 @@ import { useAuth } from './contexts/AuthContext';
 import { databases, dbId, transactionsCollectionId, budgetsCollectionId, goalsCollectionId } from './appwriteConfig';
 import { Query } from 'appwrite';
 import { calculateFinancialSummary } from './utils';
-
+import About from './components/About';
+import Contact from './components/Contact';
 // Import all your components
 import LandingPage from './components/LandingPage';
 import Login from './components/Login';
@@ -137,6 +138,8 @@ function App() {
           <Route path="/" element={<LandingPage onGetStarted={handleGetStarted} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} /> 
         </Route>
 
         <Route element={<PrivateRoute />}>
