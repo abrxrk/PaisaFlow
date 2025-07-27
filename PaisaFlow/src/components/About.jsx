@@ -8,7 +8,7 @@ const About = () => {
   const features = [
     { name: 'Full Authentication System', implementedBy: 'Abrar' },
     { name: 'Frontend UI & Design', implementedBy: 'Riddhi' },
-    { name: 'Appwrite Database Connection', implementedBy: 'Riddhi' },
+    { name: 'Appwrite Database Connection', implementedBy: 'Abrar' },
     { name: 'Interactive Dashboard & Analytics', implementedBy: 'Riddhi' },
     { name: 'Budget & Goal Tracking with CRUD', implementedBy: 'Riddhi & Abrar' },
     { name: 'AI Chatbot Integration', implementedBy: 'Riddhi' },
