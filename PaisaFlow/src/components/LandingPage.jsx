@@ -13,6 +13,7 @@ import {
   Star,
   Users
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const LandingPage = ({ onGetStarted }) => {
   const features = [
@@ -180,7 +181,7 @@ const LandingPage = ({ onGetStarted }) => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section id='features' className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
@@ -280,54 +281,54 @@ const LandingPage = ({ onGetStarted }) => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-800 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <TrendingUp className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-white font-semibold">PaisaFlow</span>
-              </div>
-              <p className="text-gray-400 text-sm">
-                Your AI-powered financial assistant for smarter money management.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="text-white font-semibold mb-4">Features</h4>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li>Budget Tracking</li>
-                <li>Goal Management</li>
-                <li>AI Assistant</li>
-                <li>Analytics</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-white font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li>About Us</li>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-                <li>Contact</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-white font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400 text-sm">
-                <li>Help Center</li>
-                <li>Documentation</li>
-                <li>Community</li>
-                <li>Status</li>
-              </ul>
-            </div>
+<footer className="bg-gray-800 py-12">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="space-y-4">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <TrendingUp className="h-5 w-5 text-white" />
           </div>
+          <span className="text-white font-semibold">PaisaFlow</span>
+        </div>
+        <p className="text-gray-400 text-sm">
+          Your AI-powered financial assistant for smarter money management.
+        </p>
+      </div>
+      
+      <div>
+        <h4 className="text-white font-semibold mb-4">Features</h4>
+        <ul className="space-y-2 text-gray-400 text-sm">
+          <li><a href="#features" className="hover:text-white transition-colors">Budget Tracking</a></li>
+          <li><a href="#features" className="hover:text-white transition-colors">Goal Management</a></li>
+          <li><a href="#features" className="hover:text-white transition-colors">AI Assistant</a></li>
+          <li><a href="#features" className="hover:text-white transition-colors">Analytics</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 className="text-white font-semibold mb-4">Company</h4>
+        <ul className="space-y-2 text-gray-400 text-sm">
+          <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
+          <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Privacy Policy</a></li>
+          <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Terms of Service</a></li>
+          <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 className="text-white font-semibold mb-4">Support</h4>
+        <ul className="space-y-2 text-gray-400 text-sm">
+          <li><a href="mailto:abrarkhawarwork@gmail.com,bhanushaliriddhiwork@gmail.com" className="hover:text-white transition-colors">Help Center</a></li>
+          <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Documentation</a></li>
+          <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Community</a></li>
+          <li><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Status</a></li>
+        </ul>
+      </div>
+    </div>
           
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
-            <p>&copy; 2024 PaisaFlow. All rights reserved.</p>
+            <p>&copy; 2025 PaisaFlow. All rights reserved.</p>
           </div>
         </div>
       </footer>

@@ -1,174 +1,100 @@
-// import React, { useState } from 'react';
-// import { LayoutDashboard, Target, Wallet, MessageCircle, Receipt, TrendingUp } from 'lucide-react';
-// import LandingPage from './components/LandingPage';
-// import ChatbotPopup from './components/ChatbotPopup';
-// import Dashboard from './components/Dashboard';
-// import BudgetTracker from './components/BudgetTracker';
-// import GoalTracker from './components/GoalTracker';
-// import TransactionHistory from './components/TransactionHistory';
-// import { mockTransactions, initialBudgets, initialGoals } from './mockData';
-// import { calculateFinancialSummary } from './utils';
-
-// function App() {
-//   const [activeTab, setActiveTab] = useState('dashboard');
-//   const [showLanding, setShowLanding] = useState(true);
-//   const [budgets, setBudgets] = useState(initialBudgets);
-//   const [goals, setGoals] = useState(initialGoals);
-
-//   const summary = calculateFinancialSummary(mockTransactions);
-
-//   const navigation = [
-//     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard },
-//     { id: 'budget', name: 'Budget', icon: Wallet },
-//     { id: 'goals', name: 'Goals', icon: Target },
-//     { id: 'transactions', name: 'Transactions', icon: Receipt },
-//   ];
-
-//   const renderContent = () => {
-//     switch (activeTab) {
-//       case 'dashboard':
-//         return <Dashboard summary={summary} budgets={budgets} goals={goals} />;
-//       case 'budget':
-//         return <BudgetTracker budgets={budgets} onUpdateBudgets={setBudgets} />;
-//       case 'goals':
-//         return <GoalTracker goals={goals} onUpdateGoals={setGoals} />;
-//       case 'transactions':
-//         return <TransactionHistory transactions={mockTransactions} />;
-//       default:
-//         return <Dashboard summary={summary} budgets={budgets} goals={goals} />;
-//     }
-//   };
-
-//   if (showLanding) {
-//     return (
-//       <>
-//         <LandingPage onGetStarted={() => setShowLanding(false)} />
-//         <ChatbotPopup transactions={mockTransactions} budgets={budgets} goals={goals} />
-//       </>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen bg-gray-50">
-//       {/* Chatbot Popup - Always Available */}
-//       <ChatbotPopup transactions={mockTransactions} budgets={budgets} goals={goals} />
-      
-//       {/* Header */}
-//       <header className="bg-white shadow-sm border-b border-gray-200">
-//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-//           <div className="flex items-center justify-between h-16">
-//             <div className="flex items-center space-x-3">
-//               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-//                 <TrendingUp className="h-5 w-5 text-white" />
-//               </div>
-//               <div>
-//                 <h1 className="text-xl font-bold text-gray-900">Smart Finance Companion</h1>
-//                 <p className="text-sm text-gray-600">Your AI-powered financial assistant</p>
-//               </div>
-//             </div>
-//             <div className="flex items-center space-x-4">
-//               <div className="text-right">
-//                 <p className="text-sm text-gray-600">Total Balance</p>
-//                 <p className="text-lg font-semibold text-green-600">
-//                   ₹{(summary.totalIncome - summary.totalExpenses).toLocaleString()}
-//                 </p>
-//               </div>
-//               <button
-//                 onClick={() => setShowLanding(true)}
-//                 className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
-//               >
-//                 Back to Home
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-//       </header>
-
-//       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-//         <div className="flex flex-col lg:flex-row gap-8">
-//           {/* Sidebar Navigation */}
-//           <nav className="lg:w-64 space-y-1">
-//             <div className="bg-white rounded-lg shadow-md p-4">
-//               {navigation.map((item) => {
-//                 const Icon = item.icon;
-//                 return (
-//                   <button
-//                     key={item.id}
-//                     onClick={() => setActiveTab(item.id)}
-//                     className={`w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-//                       activeTab === item.id
-//                         ? 'bg-blue-100 text-blue-700 border border-blue-200'
-//                         : 'text-gray-700 hover:bg-gray-100'
-//                     }`}
-//                   >
-//                     <Icon className="h-5 w-5" />
-//                     <span>{item.name}</span>
-//                   </button>
-//                 );
-//               })}
-//             </div>
-
-//             {/* Quick Stats */}
-//             <div className="bg-white rounded-lg shadow-md p-4 space-y-3">
-//               <h3 className="text-sm font-semibold text-gray-800">Quick Stats</h3>
-//               <div className="space-y-2">
-//                 <div className="flex justify-between text-sm">
-//                   <span className="text-gray-600">This Month</span>
-//                   <span className="font-medium">₹{summary.totalExpenses.toLocaleString()}</span>
-//                 </div>
-//                 <div className="flex justify-between text-sm">
-//                   <span className="text-gray-600">Savings Rate</span>
-//                   <span className="font-medium text-green-600">{summary.savingsRate.toFixed(1)}%</span>
-//                 </div>
-//                 <div className="flex justify-between text-sm">
-//                   <span className="text-gray-600">Active Goals</span>
-//                   <span className="font-medium">{goals.filter(g => g.currentAmount < g.targetAmount).length}</span>
-//                 </div>
-//               </div>
-//             </div>
-//           </nav>
-
-//           {/* Main Content */}
-//           <main className="flex-1 min-w-0">
-//             {renderContent()}
-//           </main>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default App;
-
+// FILE: src/App.jsx
 
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, Target, Wallet, MessageCircle, Receipt, TrendingUp } from 'lucide-react';
+import { Routes, Route, useNavigate, Outlet, NavLink } from 'react-router-dom';
+import { useAuth } from './contexts/AuthContext';
+import { databases, dbId, transactionsCollectionId, budgetsCollectionId, goalsCollectionId } from './appwriteConfig';
+import { Query } from 'appwrite';
+import { calculateFinancialSummary } from './utils';
+import About from './components/About';
+import Contact from './components/Contact';
+// Import all your components
 import LandingPage from './components/LandingPage';
-import ChatbotPopup from './components/ChatbotPopup';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import Header from './components/Header';
+import PrivateRoute from './components/PrivateRoute';
+import PublicRoute from './components/PublicRoute';
 import Dashboard from './components/Dashboard';
 import BudgetTracker from './components/BudgetTracker';
 import GoalTracker from './components/GoalTracker';
 import TransactionHistory from './components/TransactionHistory';
-import { calculateFinancialSummary } from './utils';
-import { databases, dbId, transactionsCollectionId, budgetsCollectionId, goalsCollectionId } from './appwriteConfig';
-import { Query } from 'appwrite';
+import ChatbotPopup from './components/ChatbotPopup';
+import { LayoutDashboard, Target, Wallet, Receipt } from 'lucide-react';
+
+// This component replaces the old MainLayout. It's the core view for logged-in users.
+const AppLayout = ({ summary, goals }) => (
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="flex flex-col lg:flex-row gap-8">
+      {/* Sidebar Navigation */}
+      <nav className="lg:w-64 space-y-1">
+        <div className="bg-white rounded-lg shadow-md p-4">
+          {[
+            { href: '/dashboard', name: 'Dashboard', icon: LayoutDashboard },
+            { href: '/budget', name: 'Budget', icon: Wallet },
+            { href: '/goals', name: 'Goals', icon: Target },
+            { href: '/transactions', name: 'Transactions', icon: Receipt },
+          ].map((item) => (
+            <NavLink
+              key={item.name}
+              to={item.href}
+              className={({ isActive }) =>
+                `w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  isActive
+                    ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`
+              }
+            >
+              <item.icon className="h-5 w-5" />
+              <span>{item.name}</span>
+            </NavLink>
+          ))}
+        </div>
+
+        {/* Quick Stats */}
+        <div className="bg-white rounded-lg shadow-md p-4 space-y-3">
+          <h3 className="text-sm font-semibold text-gray-800">Quick Stats</h3>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">This Month's Expenses</span>
+              <span className="font-medium">₹{summary.totalExpenses.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Savings Rate</span>
+              <span className="font-medium text-green-600">{summary.savingsRate > 0 ? summary.savingsRate.toFixed(1) : 0}%</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Active Goals</span>
+              <span className="font-medium">{goals.filter(g => g.currentAmount < g.targetAmount).length}</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Content Area */}
+      <main className="flex-1 min-w-0">
+        <Outlet />
+      </main>
+    </div>
+  </div>
+);
 
 function App() {
-  // --- State Management ---
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [showLanding, setShowLanding] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
-  // State to hold data fetched from Appwrite
+  // State for financial data
+  const [loadingData, setLoadingData] = useState(true);
   const [transactions, setTransactions] = useState([]);
   const [budgets, setBudgets] = useState([]);
   const [goals, setGoals] = useState([]);
 
-  // --- Data Fetching ---
+  // Data Fetching Logic
   const fetchData = async () => {
-    setLoading(true);
+    if (!user) return;
+    setLoadingData(true);
     try {
-      // Fetch all data concurrently
       const [transRes, budgetRes, goalRes] = await Promise.all([
         databases.listDocuments(dbId, transactionsCollectionId, [Query.limit(100)]),
         databases.listDocuments(dbId, budgetsCollectionId, [Query.limit(100)]),
@@ -179,7 +105,6 @@ function App() {
       setTransactions(transactionsData);
       setGoals(goalRes.documents);
 
-      // Calculate the 'spent' amount for each budget dynamically
       const budgetsData = budgetRes.documents.map(budget => {
         const spent = transactionsData
           .filter(t => t.type === 'expense' && t.category === budget.category)
@@ -190,149 +115,43 @@ function App() {
 
     } catch (error) {
       console.error("Failed to fetch data from Appwrite:", error);
-      // Optionally, set an error state to show a message in the UI
     } finally {
-      setLoading(false);
+      setLoadingData(false);
     }
   };
 
-  // Fetch data only when the user navigates away from the landing page
   useEffect(() => {
-    if (!showLanding) {
-      fetchData();
-    }
-  }, [showLanding]);
+    fetchData();
+  }, [user]);
 
-  // --- Derived State & Navigation ---
   const summary = calculateFinancialSummary(transactions);
 
-  const navigation = [
-    { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard },
-    { id: 'budget', name: 'Budget', icon: Wallet },
-    { id: 'goals', name: 'Goals', icon: Target },
-    { id: 'transactions', name: 'Transactions', icon: Receipt },
-  ];
-
-  // --- Component Rendering ---
-  const renderContent = () => {
-    if (loading) {
-      return (
-        <div className="flex justify-center items-center h-64">
-          <p className="text-gray-500">Loading your financial data...</p>
-        </div>
-      );
-    }
-    switch (activeTab) {
-      case 'dashboard':
-        return <Dashboard summary={summary} budgets={budgets} goals={goals} />;
-      case 'budget':
-        // Pass the fetchData function to allow the child to trigger a refresh
-        return <BudgetTracker budgets={budgets} onUpdate={fetchData} />;
-      case 'goals':
-        return <GoalTracker goals={goals} onUpdate={fetchData} />;
-      case 'transactions':
-        return <TransactionHistory transactions={transactions} />;
-      default:
-        return <Dashboard summary={summary} budgets={budgets} goals={goals} />;
-    }
-  };
-
-  if (showLanding) {
-    return (
-      <>
-        <LandingPage onGetStarted={() => setShowLanding(false)} />
-        {/* The chatbot has been removed from the landing page view */}
-      </>
-    );
-  }
+  const handleGetStarted = () => navigate('/login');
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Chatbot Popup - Now only available inside the main app with live data */}
-      <ChatbotPopup transactions={transactions} budgets={budgets} goals={goals} />
+    <>
+      {user && <Header />}
+      {user && <ChatbotPopup transactions={transactions} budgets={budgets} goals={goals} />}
       
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <TrendingUp className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">PaisaFlow</h1>
-                <p className="text-sm text-gray-600">Your AI-powered financial assistant</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <p className="text-sm text-gray-600">Total Balance</p>
-                <p className="text-lg font-semibold text-green-600">
-                  ₹{(summary.totalIncome - summary.totalExpenses).toLocaleString()}
-                </p>
-              </div>
-              <button
-                onClick={() => setShowLanding(true)}
-                className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
-              >
-                Back to Home
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Routes>
+        <Route element={<PublicRoute />}>
+          <Route path="/" element={<LandingPage onGetStarted={handleGetStarted} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} /> 
+        </Route>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar Navigation */}
-          <nav className="lg:w-64 space-y-1">
-            <div className="bg-white rounded-lg shadow-md p-4">
-              {navigation.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                      activeTab === item.id
-                        ? 'bg-blue-100 text-blue-700 border border-blue-200'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" />
-                    <span>{item.name}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Quick Stats */}
-            <div className="bg-white rounded-lg shadow-md p-4 space-y-3">
-              <h3 className="text-sm font-semibold text-gray-800">Quick Stats</h3>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">This Month</span>
-                  <span className="font-medium">₹{summary.totalExpenses.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Savings Rate</span>
-                  <span className="font-medium text-green-600">{summary.savingsRate > 0 ? summary.savingsRate.toFixed(1) : 0}%</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Active Goals</span>
-                  <span className="font-medium">{goals.filter(g => g.currentAmount < g.targetAmount).length}</span>
-                </div>
-              </div>
-            </div>
-          </nav>
-
-          {/* Main Content */}
-          <main className="flex-1 min-w-0">
-            {renderContent()}
-          </main>
-        </div>
-      </div>
-    </div>
+        <Route element={<PrivateRoute />}>
+          <Route element={<AppLayout summary={summary} goals={goals} />}>
+            <Route path="/dashboard" element={<Dashboard summary={summary} budgets={budgets} goals={goals} />} />
+            <Route path="/budget" element={<BudgetTracker budgets={budgets} onUpdate={fetchData} />} />
+            <Route path="/goals" element={<GoalTracker goals={goals} onUpdate={fetchData} />} />
+            <Route path="/transactions" element={<TransactionHistory transactions={transactions} />} />
+          </Route>
+        </Route>
+      </Routes>
+    </>
   );
 }
 
