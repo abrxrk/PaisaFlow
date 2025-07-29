@@ -330,7 +330,7 @@ const LandingPage = ({ onGetStarted }) => {
                 <span className="text-white font-semibold">PaisaFlow</span>
               </div>
               <p className="text-gray-400 text-sm">
-                Your AI-powered financial assistant for smarter money management.
+                Your financial assistant for smarter money management.
               </p>
             </div>
             
@@ -363,4 +363,4 @@ const LandingPage = ({ onGetStarted }) => {
   );
 };
 
-
+export default LandingPage;
